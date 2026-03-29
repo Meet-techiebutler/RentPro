@@ -103,9 +103,12 @@ export default function Navbar() {
               </>
             )}
 
-            {/* BROKER: My Properties | Inquiries | My Profile */}
+            {/* BROKER: Dashboard | My Properties | Inquiries */}
             {isBroker && (
               <>
+                <Link to="/broker" className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/broker') && !location.pathname.startsWith('/broker/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
+                  <LayoutDashboard className="w-4 h-4" /> Dashboard
+                </Link>
                 <Link to="/broker/properties" className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/broker/properties') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
                   <ListChecks className="w-4 h-4" /> My Properties
                 </Link>
@@ -116,9 +119,6 @@ export default function Navbar() {
                       {newInquiryCount > 9 ? '9+' : newInquiryCount}
                     </span>
                   )}
-                </Link>
-                <Link to="/broker" className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/broker') && !location.pathname.startsWith('/broker/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
-                  <LayoutDashboard className="w-4 h-4" /> Dashboard
                 </Link>
               </>
             )}
@@ -209,12 +209,12 @@ export default function Navbar() {
               )}
               {isBroker && (
                 <>
+                  <Link to="/broker" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><LayoutDashboard className="w-4 h-4 text-primary-500" /> Dashboard</Link>
                   <Link to="/broker/properties" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><ListChecks className="w-4 h-4 text-primary-500" /> My Properties</Link>
                   <Link to="/broker/inquiries" onClick={() => setMenuOpen(false)} className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
                     <span className="flex items-center gap-2"><Bell className="w-4 h-4 text-primary-500" /> Inquiries</span>
                     {newInquiryCount > 0 && <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{newInquiryCount > 9 ? '9+' : newInquiryCount} new</span>}
                   </Link>
-                  <Link to="/broker" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><LayoutDashboard className="w-4 h-4 text-primary-500" /> Dashboard</Link>
                   <Link to="/broker/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><UserCircle className="w-4 h-4 text-primary-500" /> My Profile</Link>
                   <button onClick={handleLogout} className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"><LogOut className="w-4 h-4" /> Logout</button>
                 </>

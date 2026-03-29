@@ -58,11 +58,35 @@ const getDashboard = asyncHandler(async (req, res) => {
 
 // GET /api/broker/properties — Broker's own properties
 const getMyProperties = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 12, status, sort = '-createdAt' } = req.query;
+  const {
+    page = 1, limit = 12, sort = '-createdAt',
+    status, q, propertyType, furnishing, tenantType,
+    occupancy, rentType, minRent, maxRent,
+  } = req.query;
   const skip = (page - 1) * limit;
 
   const query = { broker: req.user._id, isActive: true };
-  if (status) query.status = status;
+
+  if (status)       query.status       = status;
+  if (propertyType) query.propertyType = propertyType;
+  if (furnishing)   query.furnishing   = furnishing;
+  if (tenantType)   query.tenantType   = tenantType;
+  if (occupancy)    query.occupancy    = occupancy;
+  if (rentType)     query['rent.type'] = rentType;
+  if (minRent || maxRent) {
+    query['rent.amount'] = {};
+    if (minRent) query['rent.amount'].$gte = Number(minRent);
+    if (maxRent) query['rent.amount'].$lte = Number(maxRent);
+  }
+  if (q) {
+    const re = new RegExp(q, 'i');
+    query.$or = [
+      { title: re },
+      { 'location.locality': re },
+      { 'location.address': re },
+      { tags: re },
+    ];
+  }
 
   const [properties, total] = await Promise.all([
     Property.find(query).sort(sort).skip(skip).limit(Number(limit)).lean(),
