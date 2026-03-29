@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, MapPin, Building2, Shield, Star, X, ArrowRight } from 'lucide-react';
+import { Search, MapPin, Building2, Shield, Star, X, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { propertyApi } from '../api/property.api';
 import PropertyCard from '../components/property/PropertyCard';
 import { GridSkeleton } from '../components/common/Loader';
 import RAJKOT_LOCATIONS from '../data/rajkotLocations';
+import BrokerCharacter from '../components/BrokerCharacter';
 
 const PROPERTY_TYPES = [
   { label: 'Flat', value: 'flat', icon: '🏢' },
@@ -253,6 +254,100 @@ export default function Home() {
                 <p className="text-sm text-gray-500 mt-1">{s.label}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Animated Broker Showcase ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-blue-50 to-sky-100 py-16">
+        {/* Background blobs */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-primary-200 rounded-full mix-blend-multiply opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-sky-300 rounded-full mix-blend-multiply opacity-20 blur-3xl translate-x-1/3 translate-y-1/3" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            {/* Left — broker character + floating decorations */}
+            <div className="flex items-center justify-center relative min-h-[420px]">
+              {/* Floating emoji decorations */}
+              <motion.div animate={{ y: [0,-18,0], rotate:[0,12,0] }} transition={{ duration:3,   repeat:Infinity, ease:'easeInOut'           }} className="absolute top-4   right-10 text-4xl z-10">🔑</motion.div>
+              <motion.div animate={{ y: [0, 14,0], rotate:[0,-9,0] }} transition={{ duration:3.5, repeat:Infinity, ease:'easeInOut', delay:0.8 }} className="absolute top-10  left-6  text-3xl z-10">⭐</motion.div>
+              <motion.div animate={{ y: [0,-11,0]                  }} transition={{ duration:4,   repeat:Infinity, ease:'easeInOut', delay:1.5 }} className="absolute bottom-20 right-6  text-3xl z-10">🏠</motion.div>
+              <motion.div animate={{ y: [0, 16,0], rotate:[0,18,0] }} transition={{ duration:2.8, repeat:Infinity, ease:'easeInOut', delay:0.4 }} className="absolute bottom-10 left-10 text-2xl z-10">💫</motion.div>
+              <motion.div animate={{ y: [0,-14,0], rotate:[0,-8,0] }} transition={{ duration:3.2, repeat:Infinity, ease:'easeInOut', delay:2   }} className="absolute top-1/2  left-2  text-2xl z-10">📋</motion.div>
+
+              {/* Glowing circle behind character */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-64 h-64 bg-primary-200 rounded-full opacity-25 blur-2xl" />
+              </div>
+
+              <BrokerCharacter />
+            </div>
+
+            {/* Right — How It Works */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="inline-flex items-center gap-1.5 bg-primary-100 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-4">
+                  <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse" />
+                  How It Works
+                </span>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
+                  Your Personal<br />
+                  <span className="text-primary-600">Property Guide</span>
+                </h2>
+                <p className="text-gray-500 mb-8 text-base">
+                  Finding your perfect rental is just 3 easy steps away.
+                </p>
+
+                <div className="space-y-4">
+                  {[
+                    { step:'01', icon:'🔍', color:'bg-blue-50  border-blue-100',  title:'Search & Filter',  desc:'Use smart filters — type, locality, furnishing, rent range — to pinpoint exactly what you need.' },
+                    { step:'02', icon:'📩', color:'bg-green-50 border-green-100', title:'Send Inquiry',     desc:'Connect directly with verified brokers via form, WhatsApp, or call. Zero middlemen.' },
+                    { step:'03', icon:'🏠', color:'bg-amber-50  border-amber-100', title:'Move In!',         desc:'Visit the property, finalize with the broker, and settle into your dream rental.' },
+                  ].map((item, i) => (
+                    <motion.div
+                      key={item.step}
+                      initial={{ opacity: 0, x: 24 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.14, duration: 0.45 }}
+                      whileHover={{ x: 4 }}
+                      className={`flex items-start gap-4 bg-white rounded-2xl p-4 shadow-sm border ${item.color} hover:shadow-md transition-all`}
+                    >
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                        {item.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-[10px] font-black text-primary-400 tracking-widest">STEP {item.step}</span>
+                          <h3 className="text-base font-bold text-gray-900">{item.title}</h3>
+                        </div>
+                        <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                      </div>
+                      <CheckCircle2 className="w-5 h-5 text-primary-200 flex-shrink-0 mt-1" />
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-4 mt-8">
+                  <motion.button
+                    onClick={() => navigate('/properties')}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="btn-primary inline-flex items-center gap-2"
+                  >
+                    Start Searching <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                  <p className="text-xs text-gray-400">No registration needed to browse</p>
+                </div>
+              </motion.div>
+            </div>
+
           </div>
         </div>
       </section>
